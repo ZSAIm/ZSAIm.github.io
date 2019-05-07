@@ -54,24 +54,24 @@ author: ZSAIm
 * 搜索proxyhttp，找到两项 ``https://vd.l.qq.com/proxyhttp`` 。（这里搜proyhttp是因为前面省略了从视频到解析链接的寻找过程，如果不知道怎么做，就先看上文的前提建议）
 * 既然知道了请求视频的链接是proxyhttp，那么在proxyhttp发送前中断如何？
 * 转到``Sources``页面，在``XHR/fetch Breakpoints``的``+``进行添加条件断点 ``proxyhttp``，意思就是在包含proxyhttp字串的请求链接时进行中断。
-* ![图1.1](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-1.png)
+* ![图1.1](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-1.png)
 * 按F5刷新，等待中断发生。
-* ![图1.2](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-2.png)
+* ![图1.2](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-2.png)
 * 之后看到右边的调用栈信息``Call Stack``,可以看到调用函数的右边表明了被调用函数所在的JS链接。
-* ![图1.3](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-3.png)
+* ![图1.3](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-3.png)
 * 为什么要看这些呢，因为对于一个具有庞大的JS脚本链接的视频网站来说，找准加密所在的JS算法所在的链接是第一步。首先要知道的是，在POST``https://vd.l.qq.com/proxyhttp``之前肯定先需要先收集所要发送的data，所以必然这将调用到获取data的函数，而获取部分必然会与加密部分有联系，所以可以通过这样的方式来找到加密部分。
 * （事实上你可以直接在Network页面搜索``proxyhttp``来定位到目标链接（注意这不是一定的），但是由于在爱奇艺分析过程中使用了这一方法，我在这里用一下别的方法来解决。）
 * 由[图1.3]可以知道的是``tvx.core.js``是用来对发送请求的。所以大概可以估计这文件就是对请求函数的集合，既然已经到了发送的地步了，那么data肯定是已经获取完成了。
 * 第二个JS文件``pecker.js``，点击他，然后往下滚看到``Scope``项，看到e,f两项就是要发送的请求的所有数据，展开发现data中cKey已经存在，所以这里``Call Stack``往上走（往上一层调用走）。
-* ![图1.4](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-4.png)
-* ![图1.5](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-5.png)
-* ![图1.6](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-6.png)
+* ![图1.4](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-4.png)
+* ![图1.5](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-5.png)
+* ![图1.6](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-6.png)
 * 到``e.requestPostCgi``位于``htmlframe.......``（关于Call Stack看图1.3），粗看函数名似乎就是提交data的获取。将其作为重点深找一下。
 * 进入``e.requestPostCgi``后往下滚看到``Scope``，下图，本地变量``c``就是要提交的data，图1.7的中间红框部分就是本地变量``c``的获取，发现``vinfoparam``是由``62455行``生成的数据。``f.param(b.vinfoparam)``，发现该函数传入了参数``b.vinfoparam``，鼠标停在该参数出现了数据cKey。所以可以断定重点在于``b.vinfoparam``，而不是函数``f.param``。
-* ![图1.7](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-7.png)
+* ![图1.7](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-7.png)
 * 发现``b.vinfoparam``中的变量b是调用``e.requestPostCgi``时传入的参数（位于``62446``）
 * 既然这样，看【图1.3】Call Stack，往上一层调用栈走，进入调用栈``c``。
-* ![图1.8](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-8.png)
+* ![图1.8](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-8.png)
 * 传入的是
 ```python
 {
@@ -82,15 +82,15 @@ author: ZSAIm
 }
 ```
 * 我们关注的对象是``vinfoparam: g``，往前找g的生成代码。看【图1.8】的``62742``进入函数``f.getInfoConfig``。却没有发现``cKey``的踪迹，既然我们无法直接知道，不如放个断点走一走。
-* ![图1.9](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-9.png)
-* ![图1.10](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-10.png)
-* ![图1.11](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-11.png)
+* ![图1.9](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-9.png)
+* ![图1.10](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-10.png)
+* ![图1.11](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-11.png)
 * 看上图1.11，我们进入了``getInfoConfig``的调试中。
-* ![图1.12](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-12.png)
-* ![图1.13](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-13.png)
+* ![图1.12](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-12.png)
+* ![图1.13](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-13.png)
 * 一直往下走【看图1.12、图1.13】都发现cKey还没获取，一直到了``e(h)``。【图1.14】【图1.15】
-* ![图1.14](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-14.png)
-* ![图1.15](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/1-15.png)
+* ![图1.14](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-14.png)
+* ![图1.15](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-15.png)
 * ``a.cKey = b || ""``这就是cKey生成的地方。就是变量``b``，也就是
 
 ```javascript
@@ -155,9 +155,9 @@ function i(a, b, c, d, e) {
 
 * 由上面找到的【图1.15】开始。
 * 断点继续往下走，进入【图2.1】【图2.2】
-* ![图2.1](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/2-1.png)
-* ![图2.2](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/2-2.png)
-* ![图2.3](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/2-3.png)
+* ![图2.1](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/2-1.png)
+* ![图2.2](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/2-2.png)
+* ![图2.3](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/2-3.png)
 * 返回的是变量``o``，那么我们重点关注他，走到``o``，``64084行``，进去，【图2.3】看到``ua._getckey``，可以知道看来是找对地方了。
 
 ```javascript
@@ -168,21 +168,21 @@ ua._getckey = function() {
 }
 ```
 * 进去``ua.asm._getckey.apply(null, arguments)``，??????????wocao这是什么鬼【图2.4】
-* ![图2.4](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/2-4.png)
-* ![图2.5](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/2-5.png)
+* ![图2.4](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/2-4.png)
+* ![图2.5](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/2-5.png)
 * 这函数名怎么是个数字？？？而且发现也进不去，而且提示的是``native code``，这说明了这不是JS的原生代码，可能是其他语言实现的方法。
 * 事实上这是``WebAssembly``，这是一种JS的一种可以理解成是交叉编程的一种方式，目的是为了提高JS运行效率，这是由C或者其他编程语言生成的代码，生成\*.wasm然后交给WebAssembly加载处理运行。
 * 可以通过【图2.5】看到加载的wasm文件，而其中的函数名29就是对应``wasm-0005098e-29``，你点进去查看就看反汇编到具体的指令。
 * 好了，基本说明了这一种JS的技术，如果要了解更多就百度谷歌把。
 * 那么重要的是要找到这被加载的``wasm``文件。
 * 一个最简单的方法就是直接在``Sources``页面搜索``wasm``就能找到加载的wasm文件。
-* ![图2.6](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/2-6.png)
+* ![图2.6](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/2-6.png)
 * 对于找wasm也可以使用其他方法实现，但是既然是请求GET到的，当然能抓包到了，所以这里就偷懒不通过代码分析了。（不然篇幅会很长）
 * 要知道的是，我们虽然得到了wasm文件，但是任何交叉编程类的东西，都需要有接口，而这些接口或者必须提供的，所以我们还需要找到wasm接口部分，但这里先放一边，待会再进行。
 * 通过【图2.4】可以看到的是传了参数``arguments``，虽然我们得到了wasm，但是我们还是需要知道参数``arguments``才能实现算法。
 * 而``arguments``就是前面【图2.3】传递的参数``j``，我们要得到``j``。
 * 看【图2.2】进入函数``Ub()``和``n()``，而``n()``是由``var n = $a[c[m]];``提供的。所以我们F5刷新下页面在【图2.2】重新断点。为的就是单步执行，找所需。
-* ![图2.7](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/2-7.png)
+* ![图2.7](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/2-7.png)
 * 由【图2.7】出单步走，你会发现有两种``n``，一种是``undefined`` 和
 
 ```javascript
@@ -274,8 +274,8 @@ function n(a, b, c, d) {
 
 * 大家应该发现了上面的函数``o(a, b, c)``调用了方法``n(a, Ga, b, c)``，其中``a, b,c`` 我们都知道，但是``Ga``是什么东西？
 * 既然在Locan变量无法找到，那么网上一级找。看下图2.8
-* ![图2.8](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/2-8.png)
-* ![图2.9](https://github.com/ZSAIm/ZSAIm.github.io/blob/master/images/2019-05-07/2-9.png)
+* ![图2.8](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/2-8.png)
+* ![图2.9](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/2-9.png)
 * 发现上一级有``Ga``,所以，我们找到他了,看【图2.9】
 * 既然知道了要找``Ga``的缘由，那么把所有对于给``Ga``赋值的东西联系起来。
 * 这将是个漫长的过程。
