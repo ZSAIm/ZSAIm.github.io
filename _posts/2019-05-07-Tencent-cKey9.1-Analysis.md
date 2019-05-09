@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "腾讯视频cKey9.1的生成分析和实现"
-categories: JavaScript WebAssembly Python
+categories: JavaScript WebAssembly
 tags: 腾讯视频 ckey 解析
 author: ZSAIm
 ---
@@ -12,19 +12,20 @@ author: ZSAIm
 
 ## 说明：
 ### 这文章并不是对算法的分析，而仅仅是为了实现cKey9.1（因为有Nodejs了，所以就不需要担心JS脚本的运行)。
-### 而其中的算法就是取自于腾讯视频的9.1加密版本的cKey，所以本文章仅仅是对腾讯视频cKey生成算法的提取。
-
-## 项目实现
-
-* **_https://github.com/ZSAIm/iqiyi-parser_**
-* **_https://github.com/ZSAIm/iqiyi-parser/blob/master/js/tencent.js_**
+### 而其中的算法就是来源于PC网页端腾讯视频9.1加密版本的cKey算法，所以本文章仅仅是对腾讯视频cKey生成算法的提取，以实现解析。
 
 ## 前提
 
 ### 建议
 
-##### 在阅读本文章之前先阅读我的上一篇文章 [爱奇艺视频H5解析分析过程](https://www.52pojie.cn/thread-792958-1-1.html) ，因为这一文章将基于默认已知上一篇的一些使用操作方法的前提下进行。
+##### 在阅读本文章之前先阅读我的上一篇文章 [爱奇艺视频H5解析分析过程](https://zsaim.github.io/2019/05/09/Iqiyi-H5-Video-Parse-Analysis/) ，因为这一文章将基于默认已知上一篇的一些使用操作方法的前提下进行。
 ##### 这文章只对cKey生成的实现和分析，其他所需提交的参数不会在这里分析说明。
+
+
+
+
+
+
 
 ### 预备知识
   > 以下所需要的知识不需要精通，只需要了解基本的语法即可。
@@ -580,11 +581,19 @@ var importObject = {
 ### 结束分析
 #### 因为本来这篇幅就很长，所以完整的ckey代码不会在这里列出来。如果要看JS实现代码可以进入 _https://github.com/ZSAIm/iqiyi-parser/blob/master/js/tencent.js_。
 
+## 项目实现
+
+* **_https://github.com/ZSAIm/iqiyi-parser_**
+* **_https://github.com/ZSAIm/iqiyi-parser/blob/master/js/tencent.js_**
+
+
 ******
 
 ## 参考和说明
-* 本文首发于： [点这](https://www.52pojie.cn/thread-948353-1-1.html)
-* CSDN博客： [点这](https://blog.csdn.net/qq405935987/article/details/89926626)
-* Github项目链接: [点这](https://github.com/ZSAIm/iqiyi-parser)
+* 本文首发于： [**点这**](https://www.52pojie.cn/thread-948353-1-1.html)
+* CSDN博客： [**点这**](https://blog.csdn.net/qq405935987/article/details/89926626)
+* Github项目链接: [**点这**](https://github.com/ZSAIm/iqiyi-parser)
 * 本文章仅用于技术交流。
+
+
 
