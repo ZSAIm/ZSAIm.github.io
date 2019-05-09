@@ -9,17 +9,19 @@ author: ZSAIm
 * content
 {:toc}
 
-# 说明
+## 说明
 
-### 项目实现
-
-> ***https://github.com/ZSAIm/iqiyi-parser***
 
 ### 文章说明
 
-1. 模拟爱奇艺视频基于H5播放方式的视频解析过程，并且有效的解析视频真实地址。
-2. 由于在写这文章时是基于爱奇艺游客模式分析的，所以并不具备下载VIP视频的能力。
-3. 如果有兴趣的可以进入以上的Github项目地址进行提交改进。
+* 模拟爱奇艺视频基于H5播放方式的视频解析过程，并且有效的解析视频真实地址。
+* 由于在写这文章时是基于爱奇艺游客模式分析的，所以并不具备下载VIP视频的能力。
+* 如果有兴趣的可以进入以上的Github项目地址进行提交改进。
+
+
+
+
+
 
 # 正文
 ### 文章所用工具
@@ -32,10 +34,6 @@ Postman | HTTP请求调试
 Webstorm | JS调试
 Notepad++ | 文本编辑器
 UltraCompare | 文本比较器
-
-
-
-
 
 
 ### 分析过程
@@ -55,7 +53,7 @@ UltraCompare | 文本比较器
 1. 等待视频开始缓存，为了保证已经加载视频，建议等待广告结束之后再进行分析数据。
 2. 使用fiddler的过滤器，将无用的抓包数据过滤掉。（\*.CSS | \*. \*（图片类））
 
-![图0.1](https://img-blog.csdnimg.cn/20181106165423521.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图0.1](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/0-1.png)
 ***【图0.1】***
 ***
 
@@ -72,19 +70,19 @@ UltraCompare | 文本比较器
  **Content-Type** | `application/octet-stream` - 文件流格式的一般类型
 
 通过以上方法可以找到第`121`项（如下图）
-![图1.1](https://img-blog.csdnimg.cn/20181106171150207.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图1.1](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/1-1.png)
 ***【图1.1】***
 
 
 可以如下图右键保存响应数据来查看所对应项是否是所要的视频数据项
 
-![图1.2](https://img-blog.csdnimg.cn/20181106171408972.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图1.2](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/1-2.png)
 ***【图1.2】***
 
 事实得到了只是一个广告视频
 既然这一项不是目标项，那么继续往下寻找。
 可以得到下图的第`382`项。
-![图1.3](https://img-blog.csdnimg.cn/20181106172030124.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图1.3](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/1-3.png)
 ***【图1.3】***
 
 ----------*后面你会发现第`337`项是视频资源的文件头。*
@@ -122,7 +120,7 @@ UltraCompare | 文本比较器
 
 寻找比较独特的一字符串。并使用Fiddler的搜索工具进行搜索。[^2]
 
-![图1.4](https://img-blog.csdnimg.cn/20181106181058483.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图1.4](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/1-4.png)
 ***【图1.4】***
 
 >GET /r/bdcdngdct.inter.71edge.com/videos/v0/20180831/44/87/==611f0244cfe1a64d165b2f630be2e9fc==.f4v?key=0433de19d0c1b75057f6fc64c676e6ded&dis_k=c17fe85c329bf7dcd883071bb8d55fa5&dis_t=1535880044&dis_dz=CT-GuangDong_GuangZhou&dis_st=42&src=iqiyi.com&uuid=7908d205-5b8bab6c-191&rn=1535880043829&qd_tm=1535880032356&qd_tvid=1294428000&qd_vipdyn=0&qd_k=a07fc56691bd8558b5e9f23e9119b36a&cross-domain=1&qd_aid=220327201&qd_uid=&qd_stert=0&qypid=1294428000_02020031010000000000&qd_p=7908d205&qd_src=01010031010000000000&qd_index=1&qd_vip=0&qyid=836c674bfa7e7387a323d314bfb4a875&pv=0.1&qd_vipres=0&range=8192-10431487
@@ -132,7 +130,7 @@ HTTP/1.1
 
 进行搜索如下图操作
 
-![图1.5](https://img-blog.csdnimg.cn/20181106181153125.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图1.5](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/1-5.png)
 ***【图1.5】***
 
 搜索结果是`图2.3`，很多的同类项（文件流数据格式），然后你找最前的一项。会发现就我前面说的那样第`337`项。
@@ -165,21 +163,21 @@ HTTP/1.1
 
 结果如下图
 
-![图2.1](https://img-blog.csdnimg.cn/20181106184331352.png)
+![图2.1](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-1.png)
 ***【图2.1】***
 
 点开它，查看这一字符串出现在请求数据还是响应数据。
 
 你可以通过以下方式查找
 
-![图2.2](https://img-blog.csdnimg.cn/20181106184424442.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.2](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-2.png)
 ***【图2.2】***
 
-![图2.3](https://img-blog.csdnimg.cn/20181106190628946.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.3](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-3.png)
 
 ***【图2.3】***
 
-![图2.4](https://img-blog.csdnimg.cn/20181106184521840.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.4](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-4.png)
 ***【图2.4】***
 
 既然发现了第一次出现的字符串在这个地方，那么你就必须要知道这个请求链接才能知道这一字符串，所以现在是进行了下一层的构造。
@@ -236,16 +234,16 @@ index | key | value
 
 所以，可以搜索`autuKey`，为什么不是后面的值`4c31a25989ea7e678b670125e6ee5acf`呢？因为既然是密钥，有怎么会是明文呢？如果你还是不相信，可以尝试搜索一下。
 
-![图2.5](https://img-blog.csdnimg.cn/20181106190526178.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.5](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-5.png)
 ***【图2.5】***
 
-![图2.6](https://img-blog.csdnimg.cn/20181106191014165.png)
+![图2.6](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-6.png)
 ***【图2.6】***
 
 第`12`项是一个JS脚本文件，所以推测autuKey的值是通过脚本生成的，所以我们需要找到生成这一密钥的原理。
 
 （以下是这一项的JS代码，搜索autuKey如下位置）
-![图2.7](https://img-blog.csdnimg.cn/20181106191449457.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.7](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-7.png)
 ***【图2.7】***
 
 回头看一下上面的表格，然后对比一下这些参数是不是很眼熟呢？大部分的参数都已经给出来了。
@@ -259,34 +257,34 @@ index | key | value
 所以我们使用谷歌的调试工具去分析。
 
 下图底部的 `{}`可以对代码进行格式化，这样分析起来会轻松点。
-![图2.8](https://img-blog.csdnimg.cn/20181106191646595.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.8](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-8.png)
 ***【图2.8】***
 
 搜索找到`authKey`，然后在此处下断点`5420`行，如下图。
 （如果你能够顾及的话，你可以同时分析多个参数。然后你要刷新页面（可以直接按F5刷新），让他停在断点处。）
-![图2.9](https://img-blog.csdnimg.cn/20181106191710167.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.9](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-9.png)
 ***【图2.9】***
 
 刷新后停在e处，你也可以直接让指针触碰函数n，然后你就能看到
 
-![图2.10](https://img-blog.csdnimg.cn/20181106192821626.png)
+![图2.10](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-10.png)
 ***【图2.10】***
 
 点击上面的链接进去看这个函数
 
-![图2.11](https://img-blog.csdnimg.cn/20181106192914707.png)
+![图2.11](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-11.png)
 ***【图2.11】***
 
 看来这个n是调用了一串这些函数返回的结果。`u(o(c(e),e.length * g))`继续往前面找函数`c()`，触碰停留或者单步执行，进去得到如下图
 
-![图2.12](https://img-blog.csdnimg.cn/20181106193035802.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.12](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-12.png)
 ***【图2.12】***
 
 看来函数c是到底了（也就是说没有再往下调用的自定义函数了）
 
 然后是函数o，其实往前看就能找到函数o了。
 
-![图2.13](https://img-blog.csdnimg.cn/2018110619324978.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.13](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-13.png)
 ***【图2.13】***
 
 然后到函数u，在`图2.12`就能知道函数u
@@ -295,12 +293,12 @@ index | key | value
 
 那么接下来就要知道变量`I`和`A`的值了
 
-![图2.14](https://img-blog.csdnimg.cn/20181106193330542.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.14](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-14.png)
 ***【图2.14】***
 
 看参数名字`tm`大概可以知道这是一个时间戳，而且停留在`I`也发现
 
-![图2.15](https://img-blog.csdnimg.cn/20181106193625120.png)
+![图2.15](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-15.png)
 ***【图2.15】***
 
 所以这确实是一个时间戳，当然也会返回去查看给`I`赋值的那一部分代码。
@@ -311,27 +309,27 @@ index | key | value
 
 通过请求头，也就是 ==**构造②**== 中的`tvid`项的值去搜索。
 
-![图2.16](https://img-blog.csdnimg.cn/20181106194109803.png)
+![图2.16](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-16.png)
 ***【图2.16】***
 
-![图2.17](https://img-blog.csdnimg.cn/20181106194335576.png)
+![图2.17](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-17.png)
 ***【图2.17】***
 
-![图2.18](https://img-blog.csdnimg.cn/20181106194404302.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.18](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-18.png)
 ***【图2.18】***
 
 所以我们得到了`tvid`的值
 
 同样的，我们要知道`tvid`的值就要知道其请求头，很高兴的发现这一个请求头就是我们的播放的爱奇艺视频的地址，所以这个`tvid`是白送的，既然如此接着往下构造其他参数。
 
-![图2.19](https://img-blog.csdnimg.cn/20181106194439392.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.19](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-19.png)
 ***【图2.19】***
 
 下一步应该分析`k_uid=836c674bfa7e7387a323d314bfb4a875`
 
 既然这里的参数和我们的 ==**构造②**== 需求很相像，那么在进行下一步之前不如先看一下还缺什么吧。
 
-![图2.20](https://img-blog.csdnimg.cn/20181106195543520.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.20](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-20.png)
 ***【图2.20】***
 
 通过对比发现，如上图的嘴边标注有蓝点的五个参数是缺少的。
@@ -344,29 +342,29 @@ index | key | value
 
 所以我们只能去搜索`k_ft1`，结果如下图
 
-![图2.21](https://img-blog.csdnimg.cn/20181106200125417.png)
+![图2.21](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-21.png)
 ***【图2.21】***
-![图2.22](https://img-blog.csdnimg.cn/20181106200200949.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.22](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-22.png)
 ***【图2.22】***
-![图2.23](https://img-blog.csdnimg.cn/20181106200243138.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.23](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-23.png)
 ***【图2.23】***
 
 看到这里`e.k_ft1 = v.getFT1()`，这里，`getFT1`是没有经过压缩的，所以你不一定遇到参数就马上用谷歌浏览器的开发者工具取调试他，在这种情况下你可以在notepad++里面看一下，找一下这个函数。
 
-![图2.24](https://img-blog.csdnimg.cn/20181106200554247.png)
+![图2.24](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-24.png)
 ***【图2.24】***
 
-![图2.25](https://img-blog.csdnimg.cn/20181106200607266.png)
+![图2.25](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-25.png)
 ***【图2.25】***
 
-![图2.26](https://img-blog.csdnimg.cn/20181106200631540.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.26](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-26.png)
 ***【图2.26】***
 
 第二个参数：`bop=%7B%22version%22%3A%227.0%22%2C%22dfp%22%3A%22%22%7D`
 
 同样的方法，先搜索值，但是注意的是这里面的参数值是通过urlencode的，所以先解码再搜索。
 可以使用fiddler里面的textwizard工具来解码
-![图2.27](https://img-blog.csdnimg.cn/20181106200657713.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.27](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-27.png)
 ***【图2.27】***
 
 发现并没有这个，但是你可以搜索里面的`version`或者`dfp`，为什么呢？因为这很有可能是类似的JS片段。
@@ -375,7 +373,7 @@ index | key | value
 
 然后有意思的是，我们想太多了，发现其实都在下面如图这里。
 
-![图2.28](https://img-blog.csdnimg.cn/20181106200947731.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.28](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-28.png)
 ***【图2.28】***
 
 所以上图能找到前面的几个参数的依据了。
@@ -386,7 +384,7 @@ index | key | value
 
 下图是`vf`的
 
-![图2.29](https://img-blog.csdnimg.cn/2018110620143473.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.29](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-29.png)
 ***【图2.29】***
 
 所以到目前为止，完成了第二层构造，也就是 ==**构造②**==。
@@ -405,7 +403,7 @@ HTTP/1.1
 
 通过构造第二层请求头，我们得到了字符串`611f0244cfe1a64d165b2f630be2e9fc`和其响应中剩余的数据
 
-![图2.30](https://img-blog.csdnimg.cn/20181106202226365.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.30](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-30.png)
 ***【图2.30】***
 
 而要知道的是，我们的目标就是构造一的请求头，而构造二只是为了寻找字符串`611f0244cfe1a64d165b2f630be2e9fc `。
@@ -414,7 +412,7 @@ HTTP/1.1
 
 比较一下
 
-![图2.31](https://img-blog.csdnimg.cn/20181106202546310.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.31](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-31.png)
 ***【图2.31】***
 
 通过对比发现还确实缺了不少。不如先从key开始找
@@ -422,10 +420,10 @@ HTTP/1.1
 
 寻找`0433de19d0c1b75057f6fc64c676e6ded`，得到下图
 
-![图2.32](https://img-blog.csdnimg.cn/20181106202627625.png)
+![图2.32](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-32.png)
 ***【图2.32】***
 
-![图2.33](https://img-blog.csdnimg.cn/20181106202710758.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.33](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-33.png)
 ***【图2.33】***
 
 下面是第一层构造
@@ -443,7 +441,7 @@ HTTP/1.1
 我们又发现了，这个请求头跟第一层构造很相像，想必是孪生兄弟。
 
 如下图
-![图2.34](https://img-blog.csdnimg.cn/20181106202750657.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.34](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-34.png)
 ***【图2.34】***
 
 所以，事实上，如下面一段是第三层构造比第一层要多的数据
@@ -462,14 +460,20 @@ HTTP/1.1
 所以后面就大概简单的讲一下如何验证你构造出来的结果对不对。 你需要如下软件
 
 下面软件可以帮助你运行js脚本，这样你就能运行上面的函数得到加密结果。
-![图2.35](https://img-blog.csdnimg.cn/20181106204010919.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.35](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-35.png)
 ***【图2.35】***
 
 然后你可以使用postman可以帮助你提交请求数据
-![图2.36](https://img-blog.csdnimg.cn/20181106204536126.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxNDA1OTM1OTg3,size_16,color_FFFFFF,t_70)
+![图2.36](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-09/2-36.png)
 ***【图2.36】***
 
 至于这些软件如何使用我就不讲了。（如有需要自己可以去网上查教程资料什么的）
+
+
+
+### 项目实现
+
+> ***https://github.com/ZSAIm/iqiyi-parser/blob/master/core/iqiyi.py***
 
 
 ***
@@ -480,7 +484,7 @@ HTTP/1.1
 
 - CSDN博客文章：[***点这***](https://blog.csdn.net/qq405935987/article/details/83789697)
 
-- ***Github项目链接: https://github.com/ZSAIm/iqiyi-parser***
+- Github项目链接: [**点这**](https://github.com/ZSAIm/iqiyi-parser)
 
 - 本文章仅用于技术交流。
 
