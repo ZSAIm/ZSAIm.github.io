@@ -2,7 +2,7 @@
 layout: post
 title:  "爱奇艺视频H5解析分析过程"
 categories: JavaScript Fiddler
-tags: 爱奇艺 视频 解析
+tags: 爱奇艺 解析
 author: ZSAIm
 ---
 
