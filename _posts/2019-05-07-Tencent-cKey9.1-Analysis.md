@@ -44,16 +44,23 @@ author: ZSAIm
 
 ### 初次分析
 
+##### 准备工作
 
 * F12打开开发者工具。
 * 打开链接：``https://v.qq.com/x/cover/bzfkv5se8qaqel2/j002024w2wg.html`` 。
 * 切换Network查看抓包。
+
+##### 下条件断点 “XHR/fetch Breakpoints”
+
 * 搜索proxyhttp，找到两项 ``https://vd.l.qq.com/proxyhttp`` 。（这里搜proyhttp是因为前面省略了从视频到解析链接的寻找过程，如果不知道怎么做，就先看上文的前提建议）
 * 既然知道了请求视频的链接是proxyhttp，那么在proxyhttp发送前中断如何？
 * 转到``Sources``页面，在``XHR/fetch Breakpoints``的``+``进行添加条件断点 ``proxyhttp``，意思就是在包含proxyhttp字串的请求链接时进行中断。
 * ![图1.1](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-1.png)
 * 按F5刷新，等待中断发生。
 * ![图1.2](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-2.png)
+
+##### 分析调用栈 “Call Stack”
+
 * 之后看到右边的调用栈信息``Call Stack``,可以看到调用函数的右边表明了被调用函数所在的JS链接。
 * ![图1.3](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-3.png)
 * 为什么要看这些呢，因为对于一个具有庞大的JS脚本链接的视频网站来说，找准加密所在的JS算法所在的链接是第一步。首先要知道的是，在POST``https://vd.l.qq.com/proxyhttp``之前肯定先需要先收集所要发送的data，所以必然这将调用到获取data的函数，而获取部分必然会与加密部分有联系，所以可以通过这样的方式来找到加密部分。
@@ -79,6 +86,9 @@ author: ZSAIm
 }
 ```
 * 我们关注的对象是``vinfoparam: g``，往前找g的生成代码。看【图1.8】的``62742``进入函数``f.getInfoConfig``。却没有发现``cKey``的踪迹，既然我们无法直接知道，不如放个断点走一走。
+
+##### 下定点断点，进一步分析
+
 * ![图1.9](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-9.png)
 * ![图1.10](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-10.png)
 * ![图1.11](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-11.png)
@@ -90,6 +100,8 @@ author: ZSAIm
 * ![图1.15](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/1-15.png)
 * ``a.cKey = b || ""``这就是cKey生成的地方。就是变量``b``，也就是
 
+##### 找到分析对象
+
 ```javascript
 f ? (a.encryptVer = "9.1",
 		b = f(a.platform, a.appVer, a.vids || a.vid, "", a.guid, a.tm)) : (a.encryptVer = "8.1",
@@ -99,7 +111,9 @@ f ? (a.encryptVer = "9.1",
 
 * 从这里可以看到8.1版本和9.1版本的控制是由``f()``参数控制的。但这不是我们的重点，既然我们分析的是9.1版本，那么进入函数``f()``。
 
-#### 重点分析
+### 重点分析
+
+#### 贴出重点代码
 
 ```javascript
 function i(a, b, c, d, e) {
@@ -150,6 +164,8 @@ function i(a, b, c, d, e) {
   }
 ```
 
+#### 继续逐步定位分析函数
+
 * 由上面找到的【图1.15】开始。
 * 断点继续往下走，进入【图2.1】【图2.2】
 * ![图2.1](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/2-1.png)
@@ -164,6 +180,9 @@ ua._getckey = function() {
     ua.asm._getckey.apply(null, arguments)
 }
 ```
+
+#### 进入知识盲区WebAssembly
+
 * 进去``ua.asm._getckey.apply(null, arguments)``，??????????wocao这是什么鬼【图2.4】
 * ![图2.4](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/2-4.png)
 * ![图2.5](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/2-5.png)
@@ -176,6 +195,9 @@ ua._getckey = function() {
 * ![图2.6](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-05-07/2-6.png)
 * 对于找wasm也可以使用其他方法实现，但是既然是请求GET到的，当然能抓包到了，所以这里就偷懒不通过代码分析了。（不然篇幅会很长）
 * 要知道的是，我们虽然得到了wasm文件，但是任何交叉编程类的东西，都需要有接口，而这些接口或者必须提供的，所以我们还需要找到wasm接口部分，但这里先放一边，待会再进行。
+
+#### 假装了解了WebAssembly。进行下一步分析
+
 * 通过【图2.4】可以看到的是传了参数``arguments``，虽然我们得到了wasm，但是我们还是需要知道参数``arguments``才能实现算法。
 * 而``arguments``就是前面【图2.3】传递的参数``j``，我们要得到``j``。
 * 看【图2.2】进入函数``Ub()``和``n()``，而``n()``是由``var n = $a[c[m]];``提供的。所以我们F5刷新下页面在【图2.2】重新断点。为的就是单步执行，找所需。
@@ -193,7 +215,10 @@ stringToC: function(a) {
     return b
 }
 ```
-  * 往下一直找能找到``Sb()``， ``o()``， ``n()``，其中包括了循环中的``Ub``还有``f()``函数中的``k()``然后你能整理出来
+
+#### 整理函数
+
+  * 往下一直找能找到``Sb()``， ``o()``， ``n()``，其中包括了循环中的``Ub``然后你能整理出来
 
 ```javascript
 Ub = function() {
@@ -268,6 +293,8 @@ function n(a, b, c, d) {
 }
 
 ```
+
+#### 初始化变量
 
 * 大家应该发现了上面的函数``o(a, b, c)``调用了方法``n(a, Ga, b, c)``，其中``a, b,c`` 我们都知道，但是``Ga``是什么东西？
 * 既然在Locan变量无法找到，那么网上一级找。看下图2.8
@@ -353,6 +380,7 @@ Pa = !0;
 * 以上解决了``Ga``的初始化。
 * 目前为止解决了循环这一部分了。
 
+
 ```javascript
 for (var m = 0; m < d.length; m++) {
     var n = $a[c[m]];
@@ -360,6 +388,10 @@ for (var m = 0; m < d.length; m++) {
     j[m] = n(d[m])) : j[m] = d[m]
 }
 ```
+
+
+#### 接着分析下一部分
+
 
 * 那么下一部分就是
 
@@ -373,6 +405,9 @@ var o = i.apply(null, j);
 * 前面我们已经说了``i.apply(null, j);``，他的代码位于wasm中。
 * 所以目前我们需要的是正确加载wasm，只要完成这一步，所有函数都可以串起来实现cKey了。
 * 我们先看下如下代码
+
+#### 不断尝试处理加载wasm
+
 
 ```javascript
 var ub = ua.asm(ua.asmGlobalArg, ua.asmLibraryArg, Ea)
@@ -494,9 +529,13 @@ function P() {
 }
 ```
 
+#### 关于wasm缺失的20号函数
+
 * 为什么这个重要呢？当你把刚开始重点分析后面的那一个函数单步走一遍你就会发现了，当在执行``_getckey()``的时候，他会``call 20``，也就是wasm文件中的``编号20的函数``，但是你仔细看【图2.5】会发现缺少缺少了``20号``函数，这是因为他会上面在链接接口的时候链接了函数``P()``，而函数``P()``就是``20号``函数。
 * 而除此之外其他的函数对我们来说用处不大，所以你大可以使用空函数来链接。
 * 所以我如下处理了接口链接和wasm环境的配置
+
+#### 实现加载wasm
 
 ```javascript
 var fun_ = function(){};
@@ -575,7 +614,7 @@ var importObject = {
 * 注意前面花了很大篇幅来再次回顾了对变量或函数的定位方法，所以后面很大一部分我会省略这一步骤，只是直接一步带过，直说个结果。
 
 ### 结束分析
-#### 因为本来这篇幅就很长，所以完整的ckey代码不会在这里列出来。如果要看JS实现代码可以进入 _https://github.com/ZSAIm/iqiyi-parser/blob/master/js/tencent.js_。
+>  因为本来这篇幅就很长，所以完整的实现ckey生成的代码不会在这里列出来。如果要看JS实现代码可以进入 _[https://github.com/ZSAIm/iqiyi-parser/blob/master/js/tencent.js](https://github.com/ZSAIm/iqiyi-parser/blob/master/js/tencent.js)_。
 
 ## 项目实现
 
@@ -586,10 +625,8 @@ var importObject = {
 ******
 
 ## 参考和说明
-* 本文首发于： [**点这**](https://www.52pojie.cn/thread-948353-1-1.html)
+* 本文首发于吾爱破解： [**点这**](https://www.52pojie.cn/thread-948353-1-1.html)
 * CSDN博客： [**点这**](https://blog.csdn.net/qq405935987/article/details/89926626)
 * Github项目链接: [**点这**](https://github.com/ZSAIm/iqiyi-parser)
 * 本文章仅用于技术交流。
-
-
-
+* 本文是二次整理：2019/05/10
