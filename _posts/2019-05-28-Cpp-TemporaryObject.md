@@ -52,52 +52,52 @@ int main()
 对于前面的built-in类型我们无法更深入的了解这一过程，因为我们无法重载built-in类型的运算符、构造和析构这些函数，自然我们就无法通过单步调试来了解这一个过程。为了进行单步调试来加深理解，我们可以通过构建一个简单的类和重载必要的函数来展现这一整个过程。
 
 
-```Cpp
+```cpp
 #include <iostream>
 using namespace std;
 
-class X {
+class Obj {
 public:
-	int counter;
+  int counter;
 
-	//构造函数
-	X(int index) {
-		counter = index;
-		cout << "constructor counter = " << counter << ", addr=" << this << endl;
-	}
-	//析构函数
-	~X() {
-		cout << "destructor counter = " << counter << ", addr=" << this << endl;
-	}
-	//重载 = 赋值运算符
-	X& operator=(const X& from) {
-		counter = from.counter;
-		cout << "assign=： counter: " << counter << " = " << from.counter << endl;
-		cout << "assign=： addr: " << "(" << this << ")" << " <= " << "(" << &from << ")" << endl;
-		return *this;
-	}
-	//重载 + 运算符
-	X operator+(const X& from) {
-		X tmp = *this;
-		tmp.counter += from.counter;
-		cout << "operator+： counter: " << counter << " <= " << from.counter << endl;
-		cout << "operator+： addr: " << "(" << this << ")" << " <= " << "(" << &from << ")" << endl;
-		return tmp;
-	}
-	//重载 = 拷贝运算符
-	X(const X& from) {
-		counter = from.counter;
-		cout << "copy=： counter: " << counter << " <=copy " << from.counter << endl;
-		cout << "copy=： addr: " << "(" << this << ")" << " <= " << "(" << &from << ")" << endl;
-	}
+  //构造函数
+  Obj(int index) {
+    counter = index;
+    cout << "constructor counter = " << counter << ", addr=" << this << endl;
+  }
+  //析构函数
+  ~Obj() {
+    cout << "destructor counter = " << counter << ", addr=" << this << endl;
+  }
+  //重载 = 赋值运算符
+  Obj& operator=(const Obj& from) {
+    counter = from.counter;
+    cout << "assign=： counter: " << counter << " = " << from.counter << endl;
+    cout << "assign=： addr: " << "(" << this << ")" << " <= " << "(" << &from << ")" << endl;
+    return *this;
+  }
+  //重载 + 运算符
+  Obj operator+(const Obj& from) {
+    Obj tmp = *this;
+    tmp.counter += from.counter;
+    cout << "operator+： counter: " << counter << " <= " << from.counter << endl;
+    cout << "operator+： addr: " << "(" << this << ")" << " <= " << "(" << &from << ")" << endl;
+    return tmp;
+  }
+  //重载 = 拷贝运算符
+  Obj(const Obj& from) {
+    counter = from.counter;
+    cout << "copy=： counter: " << counter << " <=copy " << from.counter << endl;
+    cout << "copy=： addr: " << "(" << this << ")" << " <= " << "(" << &from << ")" << endl;
+  }
 
 };
 
 int main()
 {
-	X a(0), b(1), c(3), d(5);
+  Obj a(0), b(1), c(3), d(5);
   // 下一行就是临时对象产生的地方
-	a = b + c;
+  a = b + c;
 }
 ```
 
@@ -130,10 +130,10 @@ destructor counter = 4, addr=0041F730
 ***
 ### 逐步分析
 
-#### "X a(0), b(1), c(3), d(5)"
+#### "Obj a(0), b(1), c(3), d(5)"
 
 ```cpp
-X a(0), b(1), c(3), d(5);
+Obj a(0), b(1), c(3), d(5);
 ```
 * 构造a,b,c,d，得到结果。
 
@@ -152,12 +152,12 @@ a = b + c;
 
 按照以上分析临时变量的生成步骤进行分析。
 
-##### 执行 ``b + c``，对象进行加法操作，进入函数operator+，
+* 执行 ``b + c``，对象进行加法操作，进入函数operator+，
 
 ```cpp
 //重载 + 运算符
-X operator+(const X& from) {
-  X tmp = *this;
+Obj operator+(const Obj& from) {
+  Obj tmp = *this;
   tmp.counter += from.counter;
   cout << "operator+： counter: " << counter << " + " << from.counter << endl;
   cout << "operator+： addr: " << "(" << this << ")" << " <= " << "(" << &from << ")" << endl;
