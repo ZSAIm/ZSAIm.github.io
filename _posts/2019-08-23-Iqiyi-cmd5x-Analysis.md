@@ -275,7 +275,7 @@ for i in replace_list:
   - ![iqiyi](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-08-23/1-0.png)
   - 除此之外还可以在其他网站运行这样的代码。下面我们在www.baidu.com和www.bilibili.com下运行了这段代码。
   - ![baidu](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-08-23/1-1.png), 
-  - ![bilibili](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-08-23/1-0.png)
+  - ![bilibili](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/image/2019-08-23/1-2.png)
 
 #### 为什么这么做？
 
