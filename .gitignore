@@ -4,5 +4,5 @@ _site
 .vscode
 .idea
 .DS_Store
-.jekyll-cache/
+.jekyll-cache
 Gemfile*

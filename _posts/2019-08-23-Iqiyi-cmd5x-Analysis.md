@@ -9,6 +9,7 @@ author: ZSAIm
 * content
 {:toc}
 
+
 # 爱奇艺视频cmd5x解析算法的移植分析和实现\<Nodejs\>（2019-08）。
 
 
@@ -24,7 +25,7 @@ author: ZSAIm
 
 2. 这是``2019-08``版本的cmd5x算法的分析处理思路。
 
-3. 由于算法太臃肿，所以下面的分析讲通过贴出``伪代码``来进行分析，如果需要完整的算法可以[点这里](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/misc/2019-08-23/iqiyi_cmd5x.js)。
+3. 由于算法太臃肿，所以下面的分析讲通过贴出``伪代码``来进行分析，如果需要完整的算法可以[点这里](#链接)。
 4. 这文章的分析不是对算法的简化分析，而是为了在非浏览器端nodejs实现cmd5x算法，也就是从浏览器端移植到Nodejs。
 
 ## 大概
@@ -651,6 +652,8 @@ for i in replace_list:
 
 #### 链接
 
-- 完整JS脚本: [iqiyi_cmd5x.js](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/misc/2019-08-23/iqiyi_cmd5x.js)
+- 原cmd5x脚本：[**origin_cmd5x.js**](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/misc/2019-08-23/origin_cmd5x.js)
+
+- 移植后JS脚本： [**iqiyi_cmd5x.js**](https://raw.githubusercontent.com/ZSAIm/ZSAIm.github.io/master/misc/2019-08-23/iqiyi_cmd5x.js)
 
 
