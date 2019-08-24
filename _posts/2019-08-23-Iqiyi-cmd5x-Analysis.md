@@ -9,6 +9,7 @@ author: ZSAIm
 * content
 {:toc}
 
+[TOC]
 
 # 爱奇艺视频cmd5x解析算法的移植分析和实现\<Nodejs\>（2019-08）。
 
