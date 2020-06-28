@@ -26,6 +26,16 @@ author: ZSAIm
 2. 对于动态反爬机制最核心的地方不是token加密算法，而是其反调试策略。
 3. 任何动态的事物都是基于静态产生的，所以只要找到静态点，那么动态就会坍缩为静态。
 
+
+
+
+
+
+
+
+
+
+
 ### 工具
 
 - Fiddler: 尽可能使用新版本，如果必要，至少要带Fiddler Script功能。
@@ -36,13 +46,6 @@ author: ZSAIm
 - JavaScript
 - Fiddler Script
 - 谷歌浏览器开发者工具
-
-
-
-
-
-
-
 
 
 ## 正文
@@ -65,7 +68,7 @@ author: ZSAIm
 
 所以，根据上面所说，我们就可以理解代码注入就是在``服务器``返回请求响应之后，``Fiddler``作为中间者根据预先编写的``FiddlerScript``来将代码注入到响应中，之后再将响应转发给 ``客户端(本文所说的客户端主要是浏览器)``。以上的描述的过程体现在下面的流程图中。
 
-![1-0](http://baidu.com)
+![1-0](/image/2020-06-28/1-0.png)
 
 #### Session 处理函数
 
@@ -81,7 +84,7 @@ author: ZSAIm
 
 下图描述了``Session``处理函数的流程
 
-![1-1](http://baidu.com)
+![1-1](/image/2020-06-28/1-1.png)
 
 在本文中，代码注入是在``OnBeforeResponse``处理函数中进行。
 
@@ -266,7 +269,6 @@ static function OnBeforeResponse(oSession: Session) {
 
 [3] ModifyRequestOrResponse, [https://docs.telerik.com/fiddler/KnowledgeBase/FiddlerScript/ModifyRequestOrResponse](https://docs.telerik.com/fiddler/KnowledgeBase/FiddlerScript/ModifyRequestOrResponse)
 
-](https://github.com/zsaim)
 
 # 相关
 
