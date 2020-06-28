@@ -1,3 +1,16 @@
+---
+layout: post
+title:  "中国商标网JS调试 - 动态代码注入"
+categories: Javascript Fiddler
+tags:  商标网 代码注入
+
+author: ZSAIm
+---
+
+* content
+{:toc}
+
+
 # 中国商标网JS调试 - 动态代码注入
 
 ## 前言
@@ -22,7 +35,15 @@
 
 - JavaScript
 - Fiddler Script
-- 谷歌浏览器
+- 谷歌浏览器开发者工具
+
+
+
+
+
+
+
+
 
 ## 正文
 
